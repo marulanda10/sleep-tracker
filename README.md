@@ -1,16 +1,145 @@
-# React + Vite
+# 🌙 Sleep Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web desarrollada para registrar, monitorear y analizar hábitos de sueño de forma sencilla e intuitiva.
 
-Currently, two official plugins are available:
+Este proyecto fue desarrollado como una aplicación personal con el objetivo de practicar tecnologías modernas del ecosistema JavaScript y el uso de Firebase como base de datos en la nube.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🚀 Características
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+✅ Registro diario de horas de sueño.
 
-## Expanding the ESLint configuration
+✅ Configuración de objetivos personalizados de descanso.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+✅ Calendario interactivo para consultar registros.
+
+✅ Historial de noches registradas.
+
+✅ Almacenamiento de datos en Firebase Firestore.
+
+✅ Interfaz responsive para dispositivos móviles y escritorio.
+
+✅ Actualización en tiempo real de la información.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+| Tecnología    | Descripción                           |
+| ------------- | ------------------------------------- |
+| ⚛️ React      | Desarrollo de la interfaz de usuario  |
+| ⚡ Vite        | Entorno de desarrollo y compilación   |
+| 🔥 Firebase   | Backend y almacenamiento de datos     |
+| 🗄️ Firestore | Base de datos NoSQL en la nube        |
+| 🎨 CSS3       | Estilos y diseño visual               |
+| 🟨 JavaScript | Lógica de la aplicación               |
+| 🌐 HTML5      | Estructura de la aplicación           |
+| 🐙 Git        | Control de versiones                  |
+| 🚀 GitHub     | Gestión y alojamiento del repositorio |
+
+---
+
+## 📸 Capturas de Pantalla
+
+### 🏠 Registro y Objetivos de Sueño
+
+En esta pantalla el usuario puede configurar su objetivo de descanso y registrar diariamente las horas de sueño.
+
+![Home](screenshots/home.png)
+
+---
+
+### 📅 Calendario e Historial de Registros
+
+Visualización del calendario junto con el historial completo de registros almacenados.
+
+![Calendario e Historial](screenshots/calendario-registros.png)
+
+---
+
+## 📂 Estructura del Proyecto
+
+```text
+sleep-tracker
+│
+├── public
+├── screenshots
+│   ├── home.png
+│   └── calendario-registros.png
+│
+├── src
+│   ├── App.jsx
+│   ├── firebase.js
+│   ├── index.css
+│   └── main.jsx
+│
+├── package.json
+├── vite.config.js
+└── README.md
+```
+
+---
+
+## ⚙️ Instalación
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/marulanda10/sleep-tracker.git
+```
+
+Ingresar al proyecto:
+
+```bash
+cd sleep-tracker
+```
+
+Instalar dependencias:
+
+```bash
+npm install
+```
+
+Ejecutar el proyecto:
+
+```bash
+npm run dev
+```
+
+---
+
+## 🎯 Objetivo del Proyecto
+
+Este proyecto fue desarrollado para fortalecer conocimientos en:
+
+* React
+* Manejo de estados
+* Componentes reutilizables
+* Firebase Firestore
+* Consumo y almacenamiento de datos
+* Desarrollo Frontend moderno
+* Buenas prácticas de programación
+
+---
+
+## 👨‍💻 Autor
+
+### Alexis Marulanda
+
+Tecnólogo en Análisis y Desarrollo de Software (ADSO)
+
+💼 LinkedIn:
+https://www.linkedin.com/in/alexis-marulanda-41026b396/
+
+🐙 GitHub:
+https://github.com/marulanda10
+
+📍 Cundinamarca, Colombia
+
+---
+
+⭐ Si este proyecto te resulta interesante, no olvides darle una estrella al repositorio.
+
+
+
