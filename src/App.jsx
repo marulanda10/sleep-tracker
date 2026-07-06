@@ -5,8 +5,14 @@ import {
   Timestamp,
   onSnapshot
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut
+} from "firebase/auth";
 
 export default function App() {
   // 📌 PANTALLA
@@ -29,6 +35,9 @@ export default function App() {
 
   // 📊 REGISTROS
   const [registros, setRegistros] = useState([]);
+
+  const [usuario, setUsuario] = useState(null);
+  const [cargandoAuth, setCargandoAuth] = useState(true);
 
   // 🚀 FECHA ACTUAL (AQUÍ VA)
   const hoy = new Date();
@@ -186,8 +195,32 @@ export default function App() {
   }
 
   useEffect(() => {
-    cargarRegistros();
-    cargarObjetivo();
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+      if (user) {
+
+        console.log("✅ Usuario autenticado:", user.email);
+
+        setUsuario(user);
+
+        cargarRegistros();
+        cargarObjetivo();
+
+      } else {
+
+        console.log("❌ No hay usuario autenticado");
+
+        setUsuario(null);
+
+      }
+
+      setCargandoAuth(false);
+
+    });
+
+    return () => unsubscribe();
+
   }, []);
 
   // 💾 CARGAR DATOS TEMPORALES
@@ -243,6 +276,19 @@ export default function App() {
     }
   }
 
+  async function iniciarSesion() {
+    try {
+      const provider = new GoogleAuthProvider();
+
+      await signInWithPopup(auth, provider);
+
+      console.log("✅ Sesión iniciada");
+
+    } catch (error) {
+      console.error("❌ Error al iniciar sesión:", error);
+    }
+  }
+
   function normalizarHora(hora) {
     if (!hora) return "";
     const [h, m] = hora.split(":");
@@ -258,6 +304,42 @@ export default function App() {
       dia.anio === hoy.getFullYear()
     );
   }
+
+  // ==================== AUTH ====================
+
+  if (cargandoAuth) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+        <h2>Cargando...</h2>
+      </div>
+    );
+  }
+
+  if (!usuario) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+        <div className="bg-gray-900 p-8 rounded-2xl text-center">
+
+          <h1 className="text-3xl font-bold mb-4">
+            Sleep Tracker
+          </h1>
+
+          <p className="text-gray-400 mb-6">
+            Inicia sesión con tu cuenta de Google.
+          </p>
+
+          <button
+            onClick={iniciarSesion}
+            className="bg-blue-600 px-6 py-3 rounded-xl"
+          >
+            Continuar con Google
+          </button>
+
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-950 text-white pb-20 p-5">
