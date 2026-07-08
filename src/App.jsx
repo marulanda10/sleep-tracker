@@ -3,7 +3,11 @@ import {
   collection,
   addDoc,
   Timestamp,
-  onSnapshot
+  onSnapshot,
+  query,
+  where,
+  getDocs,
+  updateDoc
 } from "firebase/firestore";
 import { db, auth } from "./firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -29,6 +33,9 @@ export default function App() {
   const [horaDormir, setHoraDormir] = useState("");
   const [horaDespertar, setHoraDespertar] = useState("");
   const [comentario, setComentario] = useState("");
+  const [fechaRegistro, setFechaRegistro] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   // 📅 SELECCIÓN DE DÍA
   const [diaSeleccionado, setDiaSeleccionado] = useState(null);
@@ -113,17 +120,17 @@ export default function App() {
         return;
       }
 
-      const hoy = new Date();
+      const [anio, mes, dia] = fechaRegistro.split("-").map(Number);
 
       const nuevo = {
         dormir: horaDormir,
         despertar: horaDespertar,
         comentario: comentario,
 
-        fecha: hoy.getDate(),
-        mes: hoy.getMonth(),
-        anio: hoy.getFullYear(),
-        fechaKey: `${hoy.getDate()}-${hoy.getMonth() + 1}-${hoy.getFullYear()}`,
+        fecha: dia,
+        mes: mes - 1,
+        anio: anio,
+        fechaKey: `${dia}-${mes}-${anio}`,
 
         // 🔥 GUARDAS EL OBJETIVO EN ESE MOMENTO
         objetivoSnapshot: {
@@ -136,9 +143,32 @@ export default function App() {
 
       console.log("📤 Enviando a Firebase:", nuevo);
 
-      const docRef = await addDoc(collection(db, "registros"), nuevo);
+      const registrosRef = collection(db, "registros");
 
-      console.log("✅ Guardado con ID:", docRef.id);
+      const q = query(
+        registrosRef,
+        where("fechaKey", "==", nuevo.fechaKey)
+      );
+
+      const snapshot = await getDocs(q);
+
+      if (!snapshot.empty) {
+
+        // Ya existe un registro para ese día
+        const documento = snapshot.docs[0];
+
+        await updateDoc(documento.ref, nuevo);
+
+        console.log("✏️ Registro actualizado");
+
+      } else {
+
+        // No existe registro
+        const docRef = await addDoc(registrosRef, nuevo);
+
+        console.log("✅ Registro creado:", docRef.id);
+
+      }
 
       setHoraDormir("");
       setHoraDespertar("");
@@ -429,6 +459,18 @@ export default function App() {
                 {fechaCompleta}
               </p>
 
+              <p className="text-sm text-gray-400 mt-4 mb-1">
+                Fecha del registro
+              </p>
+
+              <input
+                type="date"
+                value={fechaRegistro}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={(e) => setFechaRegistro(e.target.value)}
+                className="w-full bg-gray-800 p-3 rounded-xl mb-3"
+              />
+
               {/* HORA DE DORMIR */}
               <p className="text-sm text-gray-400 mb-1">
                 Dormí a las
@@ -574,7 +616,12 @@ export default function App() {
                 </h3>
 
                 {registros
-                  .filter(r => r.fecha === diaSeleccionado.dia)
+                  .filter(
+                    r =>
+                      r.fecha === diaSeleccionado.dia &&
+                      r.mes === diaSeleccionado.mes &&
+                      r.anio === diaSeleccionado.anio
+                  )
                   .map((r, i) => (
                     <div key={i} className="space-y-2">
 
@@ -597,11 +644,16 @@ export default function App() {
                     </div>
                   ))}
 
-                {!registros.find(r => r.fecha === diaSeleccionado.dia) && (
-                  <p className="text-gray-400">
-                    No hay registro
-                  </p>
-                )}
+                {!registros.find(
+                  r =>
+                    r.fecha === diaSeleccionado.dia &&
+                    r.mes === diaSeleccionado.mes &&
+                    r.anio === diaSeleccionado.anio
+                ) && (
+                    <p className="text-gray-400">
+                      No hay registro
+                    </p>
+                  )}
               </div>
             )}
           </>
